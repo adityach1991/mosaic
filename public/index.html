@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLAT Passage & MCQ Generator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>CLAT Passage & MCQ Generator</h1>
+      <section class="form">
+        <div class="row">
+          <label>Subject</label>
+          <select id="subject">
+            <option value="English">English</option>
+            <option value="Current Affairs & GK">Current Affairs & GK</option>
+            <option value="Legal Reasoning">Legal Reasoning</option>
+            <option value="Logical Reasoning">Logical Reasoning</option>
+            <option value="Quantitative Techniques">Quantitative Techniques</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>Subtopic</label>
+          <select id="subtopic"></select>
+        </div>
+        <div class="row" id="toneRow">
+          <label>Tone (English only)</label>
+          <input id="tone" placeholder="narrative / critical / descriptive" />
+        </div>
+        <div class="row">
+          <label>Google Sheet link</label>
+          <input id="sheet" placeholder="https://docs.google.com/spreadsheets/d/..." />
+        </div>
+        <div class="row">
+          <label>Questions per passage</label>
+          <input id="count" type="number" min="1" max="12" value="10" />
+        </div>
+        <div class="actions">
+          <button id="generateBtn">Generate</button>
+          <button id="exportBtn" disabled>Confirm & Export</button>
+        </div>
+      </section>
+
+      <section class="preview">
+        <h2>Preview & Edit</h2>
+        <div class="block">
+          <label>Passage</label>
+          <textarea id="passage" rows="10" placeholder="Generated passage will appear here..."></textarea>
+        </div>
+        <div id="questions"></div>
+      </section>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+  </html>
+
