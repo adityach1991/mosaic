@@ -78,19 +78,48 @@ function getJwtClient() {
   });
 }
 
+async function getLastDataRow({ sheetId, sheetName = 'Sheet1' }) {
+  const auth = getJwtClient();
+  const sheets = google.sheets({ version: 'v4', auth });
+  // Fetch A:D to detect any non-empty cell across first 4 columns
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: sheetId,
+    range: `'${sheetName}'!A:D`,
+    majorDimension: 'ROWS',
+  });
+  const rows = res.data.values || [];
+  return rows.length; // trailing empty rows are trimmed by API
+}
+
 export async function appendToSheet({ sheetId, values, sheetName = 'Sheet1' }) {
   const auth = getJwtClient();
   const sheets = google.sheets({ version: 'v4', auth });
 
-  const range = `'${sheetName}'!A1`;
-  const response = await sheets.spreadsheets.values.append({
+  const last = await getLastDataRow({ sheetId, sheetName });
+  const startRow = (last || 0) + 1; // 1-based
+  const range = `'${sheetName}'!A${startRow}`;
+  // Ensure a visible blank separator between blocks: if there is existing data,
+  // prepend an empty row before writing the next block so the previous block's
+  // last non-empty row (typically an option) is followed by a blank line.
+  const toWrite = (last > 0) ? [[], ...values] : values;
+  const response = await sheets.spreadsheets.values.update({
     spreadsheetId: sheetId,
     range,
     valueInputOption: 'USER_ENTERED',
-    insertDataOption: 'INSERT_ROWS',
     requestBody: {
-      values,
+      values: toWrite,
+      majorDimension: 'ROWS',
     },
   });
   return response.data;
+}
+
+export async function readRange({ sheetId, range }) {
+  const auth = getJwtClient();
+  const sheets = google.sheets({ version: 'v4', auth });
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: sheetId,
+    range,
+  });
+  return res.data.values || [];
 }

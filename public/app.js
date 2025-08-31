@@ -40,6 +40,7 @@ const passageEl = document.getElementById('passage');
 const questionsEl = document.getElementById('questions');
 
 let currentPayload = null;
+let isExporting = false;
 
 function fillSubtopics() {
   const subj = subjectEl.value;
@@ -85,14 +86,27 @@ genBtn.addEventListener('click', async () => {
 });
 
 exportBtn.addEventListener('click', async () => {
+  if (isExporting) return;
   if (!currentPayload) return;
   const sheetUrlOrId = sheetEl.value.trim();
   if (!sheetUrlOrId) { alert('Please paste Google Sheet link'); return; }
   // sync UI -> payload
   currentPayload.passage = passageEl.value.trim();
-  currentPayload.questions = readQuestionsFromUI();
+  const qs = readQuestionsFromUI();
+  if (!Array.isArray(qs) || qs.length === 0) {
+    alert('Please add at least one question before exporting.');
+    return;
+  }
+  // filter out empty questions defensively
+  const filtered = qs.filter(q => String(q.question || '').trim().length > 0);
+  if (filtered.length === 0) {
+    alert('All questions are empty. Please fill them before exporting.');
+    return;
+  }
+  currentPayload.questions = filtered;
 
   exportBtn.disabled = true;
+  isExporting = true;
   try {
     const res = await fetch('/api/export', {
       method: 'POST',
@@ -106,6 +120,7 @@ exportBtn.addEventListener('click', async () => {
     alert('Error: ' + e.message);
   } finally {
     exportBtn.disabled = false;
+    isExporting = false;
   }
 });
 
