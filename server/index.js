@@ -55,9 +55,25 @@ app.post('/api/export', async (req, res) => {
     if (!payload?.passage || !Array.isArray(payload?.questions)) {
       return res.status(400).json({ error: 'payload with passage and questions is required' });
     }
+    if (payload.questions.length === 0) {
+      return res.status(400).json({ error: 'At least one question is required for export' });
+    }
+    // Validate questions have text and at least 4 options
+    const invalid = payload.questions.some((q) => {
+      const qtext = String(q?.question || '').trim();
+      const opts = Array.isArray(q?.options) ? q.options : [];
+      if (!qtext) return true;
+      if (opts.length < 4) return true;
+      // allow empty option text but prefer non-empty
+      return false;
+    });
+    if (invalid) {
+      return res.status(400).json({ error: 'Each question must have text and 4 options' });
+    }
 
     const sheetId = parseSheetId(sheetUrlOrId);
     const values = toSheetRows(payload);
+    console.log(`[export] sheet=${sheetId} passageChars=${String(payload.passage||'').length} questions=${payload.questions.length} rows=${values.length}`);
     const result = await appendToSheet({ sheetId, values, sheetName: process.env.SHEETS_TAB_NAME || 'Sheet1' });
 
     res.json({ ok: true, updates: result?.updates });
