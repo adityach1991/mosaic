@@ -1,5 +1,8 @@
 Changelog
 
+1.3.1
+- Current Affairs prompt: adjust to real CLAT trend — require 70–80% questions not directly answerable from the passage; explanations must cite outside context for non-direct and passage lines for direct; encourage integrative policy/institution/timeline/comparative framing.
+
 1.3.0
 - UI: added optional Custom Topic and Article URL fields; article note aligned and compact spacing; helper note aligned with input width.
 - Prompts: enforce CLAT question-setter persona; higher difficulty than CLAT 2021–2025; close and mutually exclusive distractors; no All/None-of-the-above; single best answer strictly from passage; concise comparative explanations; subject-specific refinements (legal application-to-facts, logical S/W/assumption, quant multi-step with calc traces).
