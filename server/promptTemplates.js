@@ -11,75 +11,100 @@ You must output strict JSON only (no markdown, no commentary) with this exact sc
     }
   ]
 }
-Ensure options are close and plausible. Do NOT include answer letters; only correct_index.
+Constraints: Options must be close and mutually exclusive, similar length, no giveaways, no "All of the above"/"None of the above". Only one clearly best answer based strictly on the passage. Explanations must justify why the correct option prevails and why each distractor fails.
+Do NOT include answer letters; only correct_index.
 `;
 
-function englishTemplate({ subtopic, questionsPerPassage, tone }) {
+function topicLine({ subtopic, customTopic, articleUrl }) {
+  const base = (customTopic && customTopic.trim()) || (subtopic && String(subtopic)) || '';
+  if (articleUrl && String(articleUrl).trim()) {
+    return `Focus: ${base ? base + '; ' : ''}emulate or synthesize a passage aligned with the article at ${articleUrl}. The model cannot browse; infer the likely angle from the URL text and write a self-contained passage that includes all facts needed for the questions.`;
+  }
+  return `Focus: ${base}. The passage must be self-contained and include all facts needed.`;
+}
+
+function englishTemplate({ subtopic, questionsPerPassage, tone, customTopic, articleUrl }) {
   const count = Math.max(1, Math.min(10, Number(questionsPerPassage) || 6));
   const styleTone = tone || 'narrative/critical/descriptive (choose the most fitting)';
-  return `Generate a 400–500 word passage in ${styleTone} tone on ${subtopic}.
+  return `ROLE: You are a seasoned CLAT UG question setter.
+DIFFICULTY: Slightly harder than CLAT 2021–2025; options should be very close and trap common misreadings, but with exactly one best answer strictly from the passage.
+${topicLine({ subtopic, customTopic, articleUrl })}
+
+TASK: Generate a 400–500 word passage in ${styleTone} tone. The passage must be self-contained (do not rely on external knowledge) and precise.
 Then create ${count} MCQs with 4 close options each. Mix:
 - 1 central idea
 - 1 author’s tone
 - 1 inference
 - 1 word/phrase meaning
 - remaining factual detail questions.
+Avoid ambiguity and absolute terms unless supported by the passage. Keep explanations concise and comparative.
 Format as JSON.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
-function currentAffairsTemplate({ subtopic, questionsPerPassage }) {
+function currentAffairsTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl }) {
   const count = Math.max(1, Math.min(12, Number(questionsPerPassage) || 10));
-  return `Generate a 400–500 word journalistic-style passage based on ${subtopic}.
-Use analysis + facts, avoid trivia style.
-Create ${count} MCQs (approx 6 factual recall with close distractors, 2 fact-not-in-passage, 2 inference/application).
+  return `ROLE: You are a seasoned CLAT UG question setter.
+DIFFICULTY: Slightly harder than CLAT 2021–2025; options very close, plausible, mutually exclusive.
+${topicLine({ subtopic, customTopic, articleUrl })}
+
+TASK: Generate a 400–500 word journalistic/editorial passage with balanced analysis and concrete facts. The passage must be self-contained and embed all needed particulars (figures, dates, names) where relevant; avoid niche trivia.
+Create ${count} MCQs with close distractors: ~6 factual/detail, 2 fact-not-in-passage (clearly wrong), 2 inference/application.
 Provide output as JSON.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
-function legalTemplate({ subtopic, questionsPerPassage }) {
+function legalTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl }) {
   const count = Math.max(1, Math.min(12, Number(questionsPerPassage) || 10));
-  return `Generate a 350–450 word legal reasoning passage explaining ${subtopic}.
-Include its scope, limitations, and 1–2 fictional illustrations.
-Then create ${count} MCQs (6–7 application to fact scenarios, 2 inference, 1 principle recall).
+  return `ROLE: You are a seasoned CLAT UG question setter.
+DIFFICULTY: Slightly harder than CLAT 2021–2025; emphasize nuanced application with tight options.
+${topicLine({ subtopic, customTopic, articleUrl })}
+
+TASK: Generate a 350–450 word legal reasoning passage stating the governing principle(s) clearly, scope/limits, and 1–2 short illustrations. The passage must contain all facts needed; avoid requiring outside statutes beyond what you state.
+Then create ${count} MCQs: 6–7 application-to-facts (with fine distinctions), 2 inference, 1 principle recall. Ensure only one option fits the stated rule and facts.
 Output JSON only.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
-function logicalTemplate({ subtopic, questionsPerPassage }) {
+function logicalTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl }) {
   const count = Math.max(1, Math.min(12, Number(questionsPerPassage) || 10));
-  return `Generate a 400–500 word passage on ${subtopic} with a neutral, editorial tone.
-Create ${count} MCQs testing inference, strengthen/weaken, assumptions, principles.
-Ensure options are very close and tricky.
+  return `ROLE: You are a seasoned CLAT UG question setter.
+DIFFICULTY: Slightly harder than CLAT 2021–2025; options are subtle and close.
+${topicLine({ subtopic, customTopic, articleUrl })}
+
+TASK: Generate a 400–500 word neutral editorial passage with clear claims and support that enable reasoning.
+Create ${count} MCQs across inference, strengthen/weaken, assumption, principle, and evaluate-argument. Ensure one best answer strictly from the passage.
 Output JSON only.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
-function quantTemplate({ subtopic, questionsPerPassage }) {
+function quantTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl }) {
   const count = Math.max(1, Math.min(10, Number(questionsPerPassage) || 6));
-  return `Generate a 180–480 word passage introducing a dataset (table/graph/survey) about ${subtopic}.
-Include numerical data (e.g., revenue across 4 quarters, student distribution, trade stats).
-Then create ${count} MCQs requiring 2+ step calculations involving % change, ratios, averages, comparisons.
-Provide answer key with calculations in the explanation field.
+  return `ROLE: You are a seasoned CLAT UG question setter.
+DIFFICULTY: Slightly harder than CLAT 2021–2025; multi-step arithmetic with close numeric options.
+${topicLine({ subtopic, customTopic, articleUrl })}
+
+TASK: Generate a 180–480 word passage introducing a dataset (table/graph/survey) about ${subtopic}. Include 8–18 concrete numbers (e.g., quarterly values, category shares, year-over-year deltas) sufficient for diverse questions.
+Then create ${count} MCQs requiring 2+ step calculations (percent change, ratios, weighted averages, comparisons). Options should be numerically tight. Include brief calculations in the explanation.
 Output JSON only.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
-export function buildPrompt({ subject, subtopic, questionsPerPassage, tone }) {
+export function buildPrompt({ subject, subtopic, questionsPerPassage, tone, customTopic, articleUrl }) {
   const normalized = String(subject || '').toLowerCase();
   switch (normalized) {
     case 'english':
     case 'english language':
-      return englishTemplate({ subtopic, questionsPerPassage, tone });
+      return englishTemplate({ subtopic, questionsPerPassage, tone, customTopic, articleUrl });
     case 'current affairs':
     case 'current affairs & gk':
     case 'gk':
-      return currentAffairsTemplate({ subtopic, questionsPerPassage });
+      return currentAffairsTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl });
     case 'legal':
     case 'legal reasoning':
-      return legalTemplate({ subtopic, questionsPerPassage });
+      return legalTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl });
     case 'logical':
     case 'logical reasoning':
-      return logicalTemplate({ subtopic, questionsPerPassage });
+      return logicalTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl });
     case 'quantitative techniques':
     case 'quant':
-      return quantTemplate({ subtopic, questionsPerPassage });
+      return quantTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl });
     default:
-      return englishTemplate({ subtopic, questionsPerPassage, tone });
+      return englishTemplate({ subtopic, questionsPerPassage, tone, customTopic, articleUrl });
   }
 }

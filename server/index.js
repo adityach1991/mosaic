@@ -26,12 +26,12 @@ app.get('/api/health', (_req, res) => {
 
 app.post('/api/generate', async (req, res) => {
   try {
-    const { subject, subtopic, questionsPerPassage = 10, tone } = req.body || {};
+    const { subject, subtopic, questionsPerPassage = 10, tone, customTopic, articleUrl } = req.body || {};
     if (!subject || !subtopic) {
       return res.status(400).json({ error: 'subject and subtopic are required' });
     }
 
-    const prompt = buildPrompt({ subject, subtopic, questionsPerPassage, tone });
+    const prompt = buildPrompt({ subject, subtopic, questionsPerPassage, tone, customTopic, articleUrl });
     const result = await callGemini({ prompt, model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' });
 
     // result must be { passage: string, questions: [ {question, options[4], correct_index, explanation} ] }

@@ -24,6 +24,18 @@
           <label>Subtopic</label>
           <select id="subtopic"></select>
         </div>
+        <div class="row">
+          <label>Custom topic (optional)</label>
+          <input id="customTopic" placeholder="e.g., Data protection and targeted advertising in India" />
+        </div>
+        <div class="row">
+          <label>Article URL (optional)</label>
+          <input id="articleUrl" placeholder="https://example.com/news/article..." />
+        </div>
+        <div class="row row-compact">
+          <label></label>
+          <div class="muted">If provided, the passage will emulate this article’s theme; the model cannot browse, so include a clear topic if the URL is niche.</div>
+        </div>
         <div class="row" id="toneRow">
           <label>Tone (English only)</label>
           <input id="tone" placeholder="narrative / critical / descriptive" />
@@ -54,4 +66,3 @@
     <script src="/app.js"></script>
   </body>
   </html>
-

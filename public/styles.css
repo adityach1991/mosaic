@@ -8,6 +8,8 @@ h1 { font-size: 22px; margin-bottom: 16px; }
 label { width: 220px; color: var(--muted); font-size: 14px; }
 input, select, textarea { flex:1; background:#0f1429; color:var(--text); border:1px solid #1d2642; border-radius:8px; padding:10px 12px; }
 textarea { resize: vertical; }
+.row .muted { flex: 1; }
+.row-compact { margin-top: -6px; }
 .actions { display:flex; gap: 12px; }
 button { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; }
 button[disabled] { opacity: .6; cursor: not-allowed; }

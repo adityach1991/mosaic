@@ -30,6 +30,8 @@ const SUBJECTS = {
 
 const subjectEl = document.getElementById('subject');
 const subtopicEl = document.getElementById('subtopic');
+const customTopicEl = document.getElementById('customTopic');
+const articleUrlEl = document.getElementById('articleUrl');
 const toneRow = document.getElementById('toneRow');
 const toneEl = document.getElementById('tone');
 const sheetEl = document.getElementById('sheet');
@@ -75,6 +77,8 @@ genBtn.addEventListener('click', async () => {
       body: JSON.stringify({
         subject: subjectEl.value,
         subtopic: subtopicEl.value,
+        customTopic: (customTopicEl?.value || '').trim() || undefined,
+        articleUrl: (articleUrlEl?.value || '').trim() || undefined,
         questionsPerPassage: Number(countEl.value) || 10,
         tone: toneEl.value || undefined,
       }),
