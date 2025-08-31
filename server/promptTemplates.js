@@ -47,8 +47,15 @@ function currentAffairsTemplate({ subtopic, questionsPerPassage, customTopic, ar
 DIFFICULTY: Slightly harder than CLAT 2021–2025; options very close, plausible, mutually exclusive.
 ${topicLine({ subtopic, customTopic, articleUrl })}
 
-TASK: Generate a 400–500 word journalistic/editorial passage with balanced analysis and concrete facts. The passage must be self-contained and embed all needed particulars (figures, dates, names) where relevant; avoid niche trivia.
-Create ${count} MCQs with close distractors: ~6 factual/detail, 2 fact-not-in-passage (clearly wrong), 2 inference/application.
+TASK: Generate a 400–500 word journalistic/editorial passage with balanced analysis and concrete facts. The passage should provide rich context but need not contain every fact needed to answer all questions; avoid niche trivia.
+
+QUESTION DESIGN (reflect real CLAT Current Affairs):
+- Target 70–80% questions that are NOT directly answerable from the passage. These should require application of widely known current affairs/general knowledge or reasonable real-world context beyond the passage.
+- The remaining 20–30% can be directly answerable from the passage (detail/inference) to anchor the set.
+- Every question must still have exactly one best answer. If the answer is non-direct, the explanation should briefly cite the relevant outside fact/context; if direct, reference the specific detail in the passage.
+- Avoid pure rote trivia; prefer integrative questions involving policy, institutions, timelines, comparative data, or consequences.
+
+Create ${count} MCQs with close distractors following the above mix.
 Provide output as JSON.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
