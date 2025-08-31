@@ -42,6 +42,12 @@ const questionsEl = document.getElementById('questions');
 let currentPayload = null;
 let isExporting = false;
 
+// Prefill default Google Sheet URL if empty (user can change it)
+const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/19BRy-4V0UhqHWrZIEiOqLC-xxKcMi_x9p7z4nXqKM_Q/edit?gid=0';
+if (!sheetEl.value || !sheetEl.value.trim()) {
+  sheetEl.value = DEFAULT_SHEET_URL;
+}
+
 function fillSubtopics() {
   const subj = subjectEl.value;
   const items = SUBJECTS[subj] || [];
