@@ -73,7 +73,6 @@ app.post('/api/export', async (req, res) => {
 
     const sheetId = parseSheetId(sheetUrlOrId);
     const values = toSheetRows(payload);
-    console.log(`[export] sheet=${sheetId} passageChars=${String(payload.passage||'').length} questions=${payload.questions.length} rows=${values.length}`);
     const result = await appendToSheet({ sheetId, values, sheetName: process.env.SHEETS_TAB_NAME || 'Sheet1' });
 
     res.json({ ok: true, updates: result?.updates });
