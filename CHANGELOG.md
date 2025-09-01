@@ -1,5 +1,9 @@
 Changelog
 
+1.3.2
+- Model: prefer Gemini 2.x (set `GEMINI_MODEL=gemini-2.5` with 2.0 fallbacks; keep 1.5 as safety). Updated model selection order.
+- Current Affairs prompt: explicit split — ~75% non-direct GK questions (outside passage) and remaining direct; enumerated GK categories (institutions, schemes, budgets, indices, judgments, awards, sports/science milestones); clarified explanations for non-direct vs direct; removed passage-only constraint for CA in the common schema note.
+
 1.3.1
 - Current Affairs prompt: adjust to real CLAT trend — require 70–80% questions not directly answerable from the passage; explanations must cite outside context for non-direct and passage lines for direct; encourage integrative policy/institution/timeline/comparative framing.
 

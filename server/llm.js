@@ -37,7 +37,16 @@ function ensureEnv() {
 function parseModelList(primary) {
   const envPrimary = primary || process.env.GEMINI_MODEL;
   const fallbacks = (process.env.GEMINI_MODEL_FALLBACKS || '').split(',').map(s => s.trim()).filter(Boolean);
-  const defaults = ['gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-1.5-pro'];
+  // Prefer newer 2.x models if available, then 1.5 family
+  const defaults = [
+    'gemini-2.5',
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-exp',
+    'gemini-2.0-pro-exp',
+    'gemini-1.5-flash',
+    'gemini-1.5-flash-8b',
+    'gemini-1.5-pro'
+  ];
   const list = [];
   if (envPrimary) list.push(envPrimary);
   list.push(...fallbacks);

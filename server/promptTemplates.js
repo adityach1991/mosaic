@@ -11,7 +11,7 @@ You must output strict JSON only (no markdown, no commentary) with this exact sc
     }
   ]
 }
-Constraints: Options must be close and mutually exclusive, similar length, no giveaways, no "All of the above"/"None of the above". Only one clearly best answer based strictly on the passage. Explanations must justify why the correct option prevails and why each distractor fails.
+Constraints: Options must be close and mutually exclusive, similar length, no giveaways, no "All of the above"/"None of the above". Only one clearly best answer. For English/Logical/Legal/Quant, answers must be strictly passage-based. For Current Affairs, non-direct questions may require widely known context beyond the passage (see template instructions).
 Do NOT include answer letters; only correct_index.
 `;
 
@@ -43,20 +43,20 @@ Format as JSON.\n\n${COMMON_JSON_SCHEMA}`;
 
 function currentAffairsTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl }) {
   const count = Math.max(1, Math.min(12, Number(questionsPerPassage) || 10));
+  const nonDirectCount = Math.max(1, Math.round(count * 0.75));
+  const directCount = Math.max(0, count - nonDirectCount);
   return `ROLE: You are a seasoned CLAT UG question setter.
 DIFFICULTY: Slightly harder than CLAT 2021–2025; options very close, plausible, mutually exclusive.
 ${topicLine({ subtopic, customTopic, articleUrl })}
 
-TASK: Generate a 400–500 word journalistic/editorial passage with balanced analysis and concrete facts. The passage should provide rich context but need not contain every fact needed to answer all questions; avoid niche trivia.
+PASSAGE: Write a 400–500 word journalistic/editorial passage with balanced analysis and concrete facts. Provide rich context, but you do not need to include every fact required to answer all questions; avoid niche trivia.
 
-QUESTION DESIGN (reflect real CLAT Current Affairs):
-- Target 70–80% questions that are NOT directly answerable from the passage. These should require application of widely known current affairs/general knowledge or reasonable real-world context beyond the passage.
-- The remaining 20–30% can be directly answerable from the passage (detail/inference) to anchor the set.
-- Every question must still have exactly one best answer. If the answer is non-direct, the explanation should briefly cite the relevant outside fact/context; if direct, reference the specific detail in the passage.
-- Avoid pure rote trivia; prefer integrative questions involving policy, institutions, timelines, comparative data, or consequences.
+QUESTION DESIGN — MATCH CLAT CURRENT AFFAIRS:
+- Create ${nonDirectCount} NON-DIRECT questions that are not answerable from the passage alone. These rely on widely known/current events GK (e.g., institutions and their mandates, major schemes, budget highlights, international organizations/summits, rankings/indices and issuing bodies, recent landmark judgments, notable appointments/awards, sports/science milestones). The correct answer should be the only option consistent with general knowledge; explanations must cite the needed outside fact in one short sentence.
+- Create ${directCount} DIRECT questions answerable from the passage (detail/inference). Explanations should point to the specific line/idea in the passage.
+- Keep all options close, mutually exclusive, similar length; no “All/None of the above”. Exactly one best answer for each question.
 
-Create ${count} MCQs with close distractors following the above mix.
-Provide output as JSON.\n\n${COMMON_JSON_SCHEMA}`;
+Output JSON only.\n\n${COMMON_JSON_SCHEMA}`;
 }
 
 function legalTemplate({ subtopic, questionsPerPassage, customTopic, articleUrl }) {
