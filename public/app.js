@@ -3,28 +3,66 @@ const SUBJECTS = {
     'Reading Comprehension (tone, inference, central idea, vocab)',
     'Literary/Narrative passages',
     'Opinion/Editorial style passages',
+    'Rhetoric & style analysis (irony, satire, metaphor, allusion)',
+    'Cross-cultural narratives & comparative themes',
+    'Science communication op-eds (risk, uncertainty, ethics)',
+    'Economic policy editorials (growth vs equity, welfare tradeoffs)',
+    'Environmental policy (climate, biodiversity, energy justice)',
+    'Technology & society (AI, privacy, platforms, misinformation)',
+    'Constitutional themes in literature (liberty, equality, fraternity)',
+    'Authorial stance, bias, and subtle framing cues',
   ],
   'Current Affairs & GK': [
     'International Relations & Conflicts',
     'Indian Economy & Surveys',
-    'Science & Tech (ISRO, Energy, AI, Climate)',
-    'Social/Environmental issues (Climate Change, Inclusive Growth)'
+    'Union Budget & Fiscal Policy',
+    'International Organisations & Summits (UN, G20, BRICS, SCO)',
+    'Indian Polity & Institutions (ECI, CAG, NITI Aayog, RBI)',
+    'Recent Supreme Court Judgments & Constitutional Developments',
+    'Space & Science (ISRO missions, Nobel/awards, breakthroughs)',
+    'Energy Transition & Climate Commitments (renewables, net zero)',
+    'Foreign Trade & FTAs (RCEP, IPEF, export policy)',
+    'Public Health Policy (programs, vaccination, AMR)',
+    'Data Protection & Privacy (DPDP Act, surveillance, platforms)',
+    'Sports Governance & Major Events',
+    'Indices & Rankings (HDI, EoDB, GHI) and issuing bodies',
+    'Awards, Appointments & Obituaries (global & national)'
   ],
   'Legal Reasoning': [
     'Legal Doctrines (Mens rea, Res Ipsa, Volenti, Estoppel)',
-    'Constitutional Law (Fundamental Rights, Amendments, Free Speech)',
-    'New Laws / Amendments (Data Protection Act, Climate Law)',
-    'Landmark Cases (Kesavananda Bharati, Puttaswamy)'
+    'Constitutional Law (FRs, Basic Structure, Free Speech, Privacy)',
+    'Criminal Law (culpable homicide vs murder, defenses, attempt)',
+    'Tort Law (negligence, strict/absolute liability, nuisance)',
+    'Contract Law (consideration, privity, frustration, misrepresentation)',
+    'Evidence (confessions, circumstantial evidence, burden & standards)',
+    'Administrative Law (natural justice, legitimate expectation)',
+    'Data Protection & Tech Law (DPDP Act, intermediaries, consent)',
+    'Environmental Law (polluter pays, precautionary, public trust)',
+    'IPR (copyright, fair dealing, patents—non-obviousness)',
+    'Landmark Cases (Kesavananda, Puttaswamy, Shreya Singhal)'
   ],
   'Logical Reasoning': [
     'Constitutional & Philosophical debates (free speech, privacy vs surveillance, populism)',
     'Public Policy dilemmas',
-    'Ethical dilemmas'
+    'Ethical dilemmas',
+    'Causal reasoning & alternative explanations',
+    'Assumptions (necessary vs sufficient) & negation test',
+    'Strengthen/Weaken with data and edge cases',
+    'Flaw identification & method of reasoning',
+    'Parallel reasoning & principle matching',
+    'Paradox resolution & plan critique'
   ],
   'Quantitative Techniques': [
     'Data Interpretation (Tables, Graphs, Pie charts, Surveys)',
-    'Percentages, Ratios, Averages',
-    'Multi-step comparisons'
+    'Multi-series time trends (YoY, QoQ, CAGR)',
+    'Percentages, Ratios, Weighted Averages',
+    'Profit/Loss with taxes & discounts',
+    'Simple vs Compound Interest comparisons',
+    'Speed-Time-Distance & relative motion',
+    'Work-Time/Pipes & cisterns (combined rates)',
+    'Mixtures & alligation; dilution problems',
+    'Venn diagrams (2-set/3-set counts)',
+    'Median/Mode (grouped data), estimation & rounding traps'
   ],
 };
 
