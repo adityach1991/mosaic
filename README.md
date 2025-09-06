@@ -9,14 +9,14 @@ Features
 - Export to Google Sheets with one click
 
 Setup
-- Node.js 18+
+- Node.js 22.x
 - Env vars: copy `.env.example` to `.env` and fill values
   - `GEMINI_API_KEY`
   - `GEMINI_MODEL` (default `gemini-2.5`), optional `GEMINI_MODEL_FALLBACKS`
   - Google Sheets credentials via one of the documented methods in `.env.example`
 
 Run
-- Development: `npm start` then open http://localhost:3000
+- Development: `npm run dev` then open http://localhost:3000
 
 Usage
 - Subject + Subtopic: choose from curated lists (expanded for variety)
@@ -35,3 +35,19 @@ Prompting & Difficulty
 Notes
 - Default model preference: 2.x (gemini‑2.5, 2.0‑flash) with 1.5 fallbacks
 - Sheets tab name defaults to `Sheet1` (override via `SHEETS_TAB_NAME`)
+
+Deploy (Vercel)
+- Structure: API under `api/` (serverless), static under `public/`.
+- Runtime: Node 22 (set via `api/index.js` and `package.json` engines).
+- Routes:
+  - `GET /api/health` → health check
+  - `POST /api/generate` → generate passage + MCQs
+  - `POST /api/export` → append rows to Google Sheet
+- Env on Vercel: add the same variables as `.env` (e.g., `GEMINI_API_KEY`, `GEMINI_MODEL`, `SHEETS_TAB_NAME`, and one of the Google service account options like `GOOGLE_SERVICE_ACCOUNT_JSON` or `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`).
+- Static site: Vercel serves `/public` at root (`/`).
+- Optional config: `vercel.json` included to route `/api/*` and serve `/public`.
+
+Steps
+- Push to Git and import the repo in Vercel, or run `npx vercel`.
+- Set Environment Variables in Vercel Project Settings.
+- Deploy; test `https://<your-app>.vercel.app/api/health`.
