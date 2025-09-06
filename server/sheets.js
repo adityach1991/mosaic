@@ -1,5 +1,4 @@
 import { google } from 'googleapis';
-import fs from 'fs';
 
 export function parseSheetId(urlOrId) {
   if (!urlOrId) throw new Error('Missing sheet URL or ID');
@@ -11,76 +10,29 @@ export function parseSheetId(urlOrId) {
   throw new Error('Could not parse Google Sheet ID');
 }
 
-function decodeIfBase64(s) {
+let cachedSheets = null;
+function getSheetsClient() {
+  if (cachedSheets) return cachedSheets;
+  const raw = process.env.GOOGLE_CREDENTIALS_JSON;
+  if (!raw) {
+    throw new Error('Missing GOOGLE_CREDENTIALS_JSON env var with full service account JSON');
+  }
+  let credentials;
   try {
-    const buf = Buffer.from(s, 'base64');
-    const text = buf.toString('utf8');
-    if (text.includes('-----BEGIN')) return text;
-  } catch {}
-  return null;
-}
-
-function normalizePrivateKey(raw) {
-  if (!raw) return '';
-  let key = String(raw);
-  // If looks like JSON with private_key field, parse it
-  if (key.trim().startsWith('{')) {
-    try {
-      const obj = JSON.parse(key);
-      if (obj.private_key) return String(obj.private_key);
-    } catch {}
+    credentials = JSON.parse(raw);
+  } catch (e) {
+    throw new Error('GOOGLE_CREDENTIALS_JSON is not valid JSON');
   }
-  // Replace escaped newlines
-  key = key.replace(/\\n/g, '\n');
-  // If base64 encoded, decode
-  if (!key.includes('-----BEGIN')) {
-    const decoded = decodeIfBase64(key);
-    if (decoded) key = decoded;
-  }
-  return key;
-}
-
-function getJwtClient() {
-  // 1) Prefer full JSON via path
-  const jsonPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-  if (jsonPath) {
-    const jsonStr = fs.readFileSync(jsonPath, 'utf8');
-    const creds = JSON.parse(jsonStr);
-    const auth = google.auth.fromJSON(creds);
-    auth.scopes = ['https://www.googleapis.com/auth/spreadsheets'];
-    return auth;
-  }
-
-  // 2) JSON string in env (or base64)
-  const jsonInline = process.env.GOOGLE_SERVICE_ACCOUNT_JSON || process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64;
-  if (jsonInline) {
-    const jsonStr = jsonInline.includes('{') ? jsonInline : Buffer.from(jsonInline, 'base64').toString('utf8');
-    const creds = JSON.parse(jsonStr);
-    const auth = google.auth.fromJSON(creds);
-    auth.scopes = ['https://www.googleapis.com/auth/spreadsheets'];
-    return auth;
-  }
-
-  // 3) Email + Private key
-  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  let privateKey = normalizePrivateKey(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
-
-  if (!clientEmail || !privateKey) {
-    throw new Error('Google service account credentials are not set. Provide GOOGLE_APPLICATION_CREDENTIALS, or GOOGLE_SERVICE_ACCOUNT_JSON, or GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY');
-  }
-  if (!privateKey.includes('BEGIN PRIVATE KEY')) {
-    throw new Error('Invalid private key format. Ensure it contains -----BEGIN PRIVATE KEY----- and proper newlines. If stored in one line, use \\n escapes or base64.');
-  }
-  return new google.auth.JWT({
-    email: clientEmail,
-    key: privateKey,
+  const auth = new google.auth.GoogleAuth({
+    credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
+  cachedSheets = google.sheets({ version: 'v4', auth });
+  return cachedSheets;
 }
 
 async function getLastDataRow({ sheetId, sheetName = 'Sheet1' }) {
-  const auth = getJwtClient();
-  const sheets = google.sheets({ version: 'v4', auth });
+  const sheets = getSheetsClient();
   // Fetch A:D to detect any non-empty cell across first 4 columns
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
@@ -92,8 +44,7 @@ async function getLastDataRow({ sheetId, sheetName = 'Sheet1' }) {
 }
 
 export async function appendToSheet({ sheetId, values, sheetName = 'Sheet1' }) {
-  const auth = getJwtClient();
-  const sheets = google.sheets({ version: 'v4', auth });
+  const sheets = getSheetsClient();
 
   const last = await getLastDataRow({ sheetId, sheetName });
   const startRow = (last || 0) + 1; // 1-based
@@ -115,8 +66,7 @@ export async function appendToSheet({ sheetId, values, sheetName = 'Sheet1' }) {
 }
 
 export async function readRange({ sheetId, range }) {
-  const auth = getJwtClient();
-  const sheets = google.sheets({ version: 'v4', auth });
+  const sheets = getSheetsClient();
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
     range,

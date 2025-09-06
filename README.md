@@ -10,10 +10,10 @@ Features
 
 Setup
 - Node.js 22.x
-- Env vars: copy `.env.example` to `.env` and fill values
-  - `GEMINI_API_KEY`
-  - `GEMINI_MODEL` (default `gemini-2.5`), optional `GEMINI_MODEL_FALLBACKS`
-  - Google Sheets credentials via one of the documented methods in `.env.example`
+ - Env vars: copy `.env.example` to `.env` and fill values
+   - `GEMINI_API_KEY`
+   - `GEMINI_MODEL` (default `gemini-2.5`), optional `GEMINI_MODEL_FALLBACKS`
+   - Google Sheets credentials via `GOOGLE_CREDENTIALS_JSON` (paste full service account JSON)
 
 Run
 - Development: `npm run dev` then open http://localhost:3000
@@ -43,7 +43,7 @@ Deploy (Vercel)
   - `GET /api/health` → health check
   - `POST /api/generate` → generate passage + MCQs
   - `POST /api/export` → append rows to Google Sheet
-- Env on Vercel: add the same variables as `.env` (e.g., `GEMINI_API_KEY`, `GEMINI_MODEL`, `SHEETS_TAB_NAME`, and one of the Google service account options like `GOOGLE_SERVICE_ACCOUNT_JSON` or `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`).
+- Env on Vercel: add the same variables as `.env` (e.g., `GEMINI_API_KEY`, `GEMINI_MODEL`, `SHEETS_TAB_NAME`, and `GOOGLE_CREDENTIALS_JSON` containing the full service account JSON).
 - Static site: Vercel serves `/public` at root (`/`).
 - Optional config: `vercel.json` included to route `/api/*` and serve `/public`.
 
