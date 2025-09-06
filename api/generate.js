@@ -27,21 +27,20 @@ export default async function handler(req, res) {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const candidates = [
-      process.env.GEMINI_MODEL || 'gemini-2.0-flash',
-      ...(process.env.GEMINI_MODEL_FALLBACKS || 'gemini-1.5-flash').split(','),
-    ]
-      .map((s) => s.trim())
-      .filter(Boolean);
+      (process.env.GEMINI_MODEL || 'gemini-1.5-flash').trim(),
+      'gemini-1.0-pro',
+    ].filter(Boolean);
 
-    let model = null,
-      modelName = null;
+    let model = null;
+    let modelName = null;
     for (const name of candidates) {
       try {
         model = genAI.getGenerativeModel({ model: name });
         modelName = name;
+        console.log('Using Gemini model:', name);
         break;
       } catch (e) {
-        console.warn('Model init failed:', name, e?.message || e);
+        console.error('Model not available:', name, e?.message || e);
       }
     }
     if (!model) return jsonError(res, 500, 'No Gemini model available');
@@ -98,4 +97,3 @@ export default async function handler(req, res) {
     return jsonError(res, 500, 'Unhandled error', { message: e?.message, stack: e?.stack });
   }
 }
-
