@@ -50,7 +50,8 @@ const SUBJECTS = {
     'Strengthen/Weaken with data and edge cases',
     'Flaw identification & method of reasoning',
     'Parallel reasoning & principle matching',
-    'Paradox resolution & plan critique'
+    'Paradox resolution & plan critique',
+    'Analytical Reasoning'
   ],
   'Quantitative Techniques': [
     'Data Interpretation (Tables, Graphs, Pie charts, Surveys)',
