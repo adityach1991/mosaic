@@ -40,12 +40,10 @@ function parseModelList(primary) {
   // Prefer newer 2.x models if available, then 1.5 family
   const defaults = [
     'gemini-2.5-flash',
+    'gemini-2.5-pro',
     'gemini-2.0-flash',
     'gemini-2.0-flash-exp',
-    'gemini-2.0-pro-exp',
-    'gemini-1.5-flash',
-    'gemini-1.5-flash-8b',
-    'gemini-1.5-pro'
+    'gemini-2.0-pro-exp'
   ];
   const list = [];
   if (envPrimary) list.push(envPrimary);
