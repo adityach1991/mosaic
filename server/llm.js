@@ -39,11 +39,14 @@ function parseModelList(primary) {
   const fallbacks = (process.env.GEMINI_MODEL_FALLBACKS || '').split(',').map(s => s.trim()).filter(Boolean);
   // Prefer newer 2.x models if available, then 1.5 family
   const defaults = [
-    'gemini-2.5-flash',
+    'gemini-pro-latest',
+    'gemini-flash-latest',
     'gemini-2.5-pro',
+    'gemini-2.5-flash',
+    'gemini-2.5-flash-lite',
     'gemini-2.0-flash',
     'gemini-2.0-flash-exp',
-    'gemini-2.0-pro-exp'
+    'gemini-2.0-flash-001'
   ];
   const list = [];
   if (envPrimary) list.push(envPrimary);
