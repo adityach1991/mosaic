@@ -51,7 +51,8 @@ const SUBJECTS = {
     'Flaw identification & method of reasoning',
     'Parallel reasoning & principle matching',
     'Paradox resolution & plan critique',
-    'Analytical Reasoning'
+    'Analytical Reasoning - 1 (Ordering & Arrangement, Grouping/Selection)',
+    'Analytical Reasoning - 2 (Blood Relations, Directions/Distance, Syllalogisms)'
   ],
   'Quantitative Techniques': [
     'Data Interpretation (Tables, Graphs, Pie charts, Surveys)',
